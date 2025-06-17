@@ -12,7 +12,8 @@ model User {
   username         String    @unique @db.VarChar(30)
   firstName        String    @db.VarChar(30)
   lastName         String    @db.VarChar(30)
-  profilePicture   String
+  password         String
+  profilePicture   String?
   createdAt        DateTime  @default(now())
   sentMessages     Message[] @relation("Sender")
   receivedMessages Message[] @relation("Receiver")

@@ -4,7 +4,8 @@ CREATE TABLE "User" (
     "username" VARCHAR(30) NOT NULL,
     "firstName" VARCHAR(30) NOT NULL,
     "lastName" VARCHAR(30) NOT NULL,
-    "profilePicture" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "profilePicture" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
