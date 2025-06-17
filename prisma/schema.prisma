@@ -6,3 +6,32 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id               String    @id @default(uuid())
+  username         String    @unique @db.VarChar(30)
+  firstName        String    @db.VarChar(30)
+  lastName         String    @db.VarChar(30)
+  profilePicture   String
+  createdAt        DateTime  @default(now())
+  sentMessages     Message[] @relation("Sender")
+  receivedMessages Message[] @relation("Receiver")
+  chats            Chat[]
+}
+
+model Message {
+  id         String @id @default(uuid())
+  sender     User   @relation("Sender", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User   @relation("Receiver", fields: [receiverId], references: [id])
+  receiverId String
+  content    String
+  chat       Chat   @relation(fields: [chatId], references: [id])
+  chatId     String
+}
+
+model Chat {
+  id           String    @id @default(uuid())
+  messages     Message[]
+  participants User[]
+}
