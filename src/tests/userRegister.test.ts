@@ -1,20 +1,10 @@
 import request from 'supertest';
 import app from '../app';
 import db from '../db/db';
+import generateMockedUser from '../utils/generateMockedUser';
 
 describe('POST /user/register', () => {
   let createdUsername: string | null = null;
-
-  const generateMockedData = (overrides = {}) => {
-    const user = {
-      username: `user_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-      firstName: 'Dummy',
-      lastName: 'User',
-      password: '12345678',
-      ...overrides,
-    };
-    return user;
-  };
 
   afterEach(async () => {
     if (createdUsername) {
@@ -26,7 +16,7 @@ describe('POST /user/register', () => {
   });
 
   it('should create a new user with appropriate data', async () => {
-    const userData = generateMockedData();
+    const userData = generateMockedUser();
 
     const response = await request(app).post('/user/register').send(userData);
 
@@ -38,7 +28,7 @@ describe('POST /user/register', () => {
   it('should throw error when firstName is missing', async () => {
     const response = await request(app)
       .post('/user/register')
-      .send(generateMockedData({ firstName: '' }));
+      .send(generateMockedUser({ firstName: '' }));
 
     expect(response.status).toBe(409);
     expect(response.body.errors[0].msg).toBe(
@@ -49,7 +39,7 @@ describe('POST /user/register', () => {
   it('should throw error when lastName is missing', async () => {
     const response = await request(app)
       .post('/user/register')
-      .send(generateMockedData({ lastName: '' }));
+      .send(generateMockedUser({ lastName: '' }));
 
     expect(response.status).toBe(409);
     expect(response.body.errors[0].msg).toBe(
@@ -60,7 +50,7 @@ describe('POST /user/register', () => {
   it('should throw error when username is missing', async () => {
     const response = await request(app)
       .post('/user/register')
-      .send(generateMockedData({ username: '' }));
+      .send(generateMockedUser({ username: '' }));
 
     expect(response.status).toBe(409);
     expect(response.body.errors[0].msg).toBe(
@@ -71,7 +61,7 @@ describe('POST /user/register', () => {
   it('should throw error when password is missing', async () => {
     const response = await request(app)
       .post('/user/register')
-      .send(generateMockedData({ password: '' }));
+      .send(generateMockedUser({ password: '' }));
 
     expect(response.status).toBe(409);
     expect(response.body.errors[0].msg).toBe(
@@ -80,7 +70,7 @@ describe('POST /user/register', () => {
   });
 
   it('should throw error when there already username already exists', async () => {
-    const userData = generateMockedData();
+    const userData = generateMockedUser();
 
     // 1st request
     await request(app).post('/user/register').send(userData);

@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { CustomRequest } from '../types/CustomRequest';
-const secretKey: string = process.env.JWT_SECRET_KEY as string; //Secret JWT Key
+const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY as string; //Secret JWT Key
 
 const verifyUser = (req: CustomRequest, res: Response, next: NextFunction) => {
   if (!req.token) {
@@ -11,7 +11,7 @@ const verifyUser = (req: CustomRequest, res: Response, next: NextFunction) => {
     return;
   }
   //Verifies token
-  jwt.verify(req.token, secretKey, (err, decoded) => {
+  jwt.verify(req.token, JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
       res.status(403).json({
         message: err.message,

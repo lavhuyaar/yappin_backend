@@ -4,7 +4,6 @@ import cors from 'cors';
 import routes from './routes/routes';
 
 import errorHandler from './middlewares/errorHandler';
-import userRoutes from './routes/userRoutes';
 
 const app = express();
 app.use(express.urlencoded());
@@ -25,7 +24,6 @@ const corsOptionsDelegate = (req: Request, callback: Function) => {
 app.use(cors(corsOptionsDelegate));
 
 app.use(routes);
-app.use(userRoutes);
 
 //Global error handler
 app.use(errorHandler);

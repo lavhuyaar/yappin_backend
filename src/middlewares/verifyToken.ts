@@ -13,7 +13,7 @@ export const verifyToken = (
     next();
   } else {
     res.status(403).json({
-      message: 'Token not found',
+      message: 'Token not found!',
     });
     return;
   }

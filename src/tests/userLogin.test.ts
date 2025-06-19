@@ -1,14 +1,10 @@
 import request from 'supertest';
 import app from '../app';
 import db from '../db/db';
+import generateMockedUser from '../utils/generateMockedUser';
 
 describe('POST /user/login', () => {
-  const mockedUser = {
-    username: `user_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-    firstName: 'Dummy',
-    lastName: 'User',
-    password: '12345678',
-  };
+  const mockedUser = generateMockedUser();
 
   const userCredentials = {
     username: mockedUser.username,
