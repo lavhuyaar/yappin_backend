@@ -4,11 +4,12 @@ import app from '../app';
 import generateMockedUser from '../utils/generateMockedUser';
 import generateMockedToken from '../utils/generateMockedToken';
 
-describe('POST /chat/create', () => {
+describe('GET /chat/:userBId', () => {
   const mockedUserA = generateMockedUser();
   const mockedUserB = generateMockedUser();
 
   let mockedUserAToken: string;
+  let mockedUserAId: string;
   let mockedUserBId: string;
 
   let chatId: string | undefined = undefined;
@@ -16,6 +17,7 @@ describe('POST /chat/create', () => {
   //Creates mocked users
   beforeAll(async () => {
     const user1 = await db.user.create({ data: mockedUserA });
+    mockedUserAId = user1.id;
     mockedUserAToken = generateMockedToken(user1); //Mocked JWT Token
 
     const user2 = await db.user.create({ data: mockedUserB });
@@ -43,7 +45,7 @@ describe('POST /chat/create', () => {
 
   it('should create a chat', async () => {
     const response = await request(app)
-      .post(`/chat/create/${mockedUserBId}`)
+      .get(`/chat/${mockedUserBId}`)
       .set('Authorization', `Bearer ${mockedUserAToken}`);
 
     chatId = response.body.chat.id;
@@ -53,19 +55,19 @@ describe('POST /chat/create', () => {
     expect(response.body.message).toBe('Chat created successfully!');
   });
 
-  it('should throw an error if no id of UserB is used as param', async () => {
+  it('should throw an error if IDs of User A and User B are same', async () => {
     const response = await request(app)
-      .post(`/chat/create`)
+      .get(`/chat/${mockedUserAId}`)
       .set('Authorization', `Bearer ${mockedUserAToken}`);
 
-    expect(response.status).toBe(404);
-    expect(response.body.message).toBe('User Id not found!');
+    expect(response.status).toBe(409);
+    expect(response.body.message).toBe('Chat cannot be created with yourself!');
   });
 
   it('should throw an error if there is no bearer token', async () => {
-    const response = await request(app).post(`/chat/create`);
+    const response = await request(app).get(`/chat/${mockedUserBId}`);
 
     expect(response.status).toBe(403);
-    expect(response.body.message).toBe('Token not found!');
+    expect(response.body.message).toBe('Token not found');
   });
 });
