@@ -33,14 +33,12 @@ export const createNewUser = async ({
   return user;
 };
 
-export const isUsernameExists = async (username: string) => {
+export const getUserByUsername = async (username: string) => {
   const user = await db.user.findUnique({
     where: {
       username,
     },
   });
 
-  if (user) {
-    return true;
-  } else return false;
+  return user;
 };

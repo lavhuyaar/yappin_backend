@@ -40,8 +40,10 @@ describe('POST /user/register', () => {
       .post('/user/register')
       .send(generateMockedData({ firstName: '' }));
 
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Missing credentials!');
+    expect(response.status).toBe(409);
+    expect(response.body.errors[0].msg).toBe(
+      'First name must be between 2 and 30 characters',
+    );
   });
 
   it('should throw error when lastName is missing', async () => {
@@ -49,8 +51,10 @@ describe('POST /user/register', () => {
       .post('/user/register')
       .send(generateMockedData({ lastName: '' }));
 
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Missing credentials!');
+    expect(response.status).toBe(409);
+    expect(response.body.errors[0].msg).toBe(
+      'Last name must be between 2 and 30 characters',
+    );
   });
 
   it('should throw error when username is missing', async () => {
@@ -58,8 +62,10 @@ describe('POST /user/register', () => {
       .post('/user/register')
       .send(generateMockedData({ username: '' }));
 
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Missing credentials!');
+    expect(response.status).toBe(409);
+    expect(response.body.errors[0].msg).toBe(
+      'Username must be between 2 and 30 characters',
+    );
   });
 
   it('should throw error when password is missing', async () => {
@@ -67,8 +73,10 @@ describe('POST /user/register', () => {
       .post('/user/register')
       .send(generateMockedData({ password: '' }));
 
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Missing credentials!');
+    expect(response.status).toBe(409);
+    expect(response.body.errors[0].msg).toBe(
+      'Password must be atleast 6 letters',
+    );
   });
 
   it('should throw error when there already username already exists', async () => {
