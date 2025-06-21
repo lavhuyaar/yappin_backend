@@ -32,6 +32,13 @@ describe('POST /message', () => {
   });
 
   afterAll(async () => {
+    // Deletes all messages of the chat
+    await db.message.deleteMany({
+      where: {
+        chatId,
+      },
+    });
+
     // Deletes chat
     await db.chat.delete({
       where: {
@@ -57,7 +64,7 @@ describe('POST /message', () => {
         receiverId: mockedUserBId,
         chatId,
       })
-      .set('Authorization', `Beader ${tokenA}`);
+      .set('Authorization', `Bearer ${tokenA}`);
 
     expect(response.status).toBe(201);
     expect(response.body.message).toBe('Message sent successfully!');
@@ -67,11 +74,11 @@ describe('POST /message', () => {
     const response = await request(app)
       .post('/message')
       .send({
-        content: 'First message',
+        content: 'Second message',
         receiverId: mockedUserAId,
         chatId,
       })
-      .set('Authorization', `Beader ${tokenB}`);
+      .set('Authorization', `Bearer ${tokenB}`);
 
     expect(response.status).toBe(201);
     expect(response.body.message).toBe('Message sent successfully!');
@@ -89,11 +96,14 @@ describe('POST /message', () => {
   });
 
   it('should throw an error if there is no message content', async () => {
-    const response = await request(app).post('/message').send({
-      content: '',
-      receiverId: mockedUserAId,
-      chatId,
-    });
+    const response = await request(app)
+      .post('/message')
+      .send({
+        content: '',
+        receiverId: mockedUserAId,
+        chatId,
+      })
+      .set('Authorization', `Beader ${tokenB}`);
 
     expect(response.status).toBe(409);
     expect(response.body.errors[0].msg).toBe(
@@ -110,7 +120,6 @@ describe('POST /message', () => {
         messages: true,
       },
     });
-
-    expect(chat?.messages.length).toBe(2);
+    expect(chat?.messages?.length).toBe(2);
   });
 });

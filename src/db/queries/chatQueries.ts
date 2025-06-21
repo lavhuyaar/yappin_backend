@@ -26,7 +26,7 @@ export const getChatByUserIds = async (userAId: string, userBId: string) => {
           id: true,
           firstName: true,
           lastName: true,
-          username: true
+          username: true,
         },
       },
       messages: {
@@ -50,4 +50,14 @@ export const getChatByUserIds = async (userAId: string, userBId: string) => {
   });
 
   return chat;
+};
+
+export const getChatById = async (chatId: string) => {
+  const chat = await db.chat.findUnique({
+    where: {
+      id: chatId,
+    },
+  });
+
+  return chatId;
 };
