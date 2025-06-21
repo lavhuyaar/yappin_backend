@@ -15,24 +15,28 @@ model User {
   password         String
   profilePicture   String?
   createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   sentMessages     Message[] @relation("Sender")
   receivedMessages Message[] @relation("Receiver")
   chats            Chat[]    @relation("UserChats")
 }
 
 model Message {
-  id         String @id @default(uuid())
-  sender     User   @relation("Sender", fields: [senderId], references: [id])
+  id         String   @id @default(uuid())
+  sender     User     @relation("Sender", fields: [senderId], references: [id])
   senderId   String
-  receiver   User   @relation("Receiver", fields: [receiverId], references: [id])
+  receiver   User     @relation("Receiver", fields: [receiverId], references: [id])
   receiverId String
   content    String
-  chat       Chat   @relation(fields: [chatId], references: [id])
+  chat       Chat     @relation(fields: [chatId], references: [id])
   chatId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Chat {
-  id       String    @id @default(uuid())
-  messages Message[]
-  users    User[]    @relation("UserChats")
+  id        String    @id @default(uuid())
+  messages  Message[]
+  users     User[]    @relation("UserChats")
+  createdAt DateTime  @default(now())
 }
