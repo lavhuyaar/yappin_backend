@@ -1,11 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { CustomRequest } from '../types/CustomRequest';
 
-export const verifyToken = (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction,
-) => {
+const verifyToken = (req: CustomRequest, res: Response, next: NextFunction) => {
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== undefined) {
     const bearerToken = bearerHeader?.split(' ')[1];
@@ -18,3 +14,5 @@ export const verifyToken = (
     return;
   }
 };
+
+export default verifyToken;

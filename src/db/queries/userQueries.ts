@@ -42,3 +42,15 @@ export const getUserByUsername = async (username: string) => {
 
   return user;
 };
+
+export const getOtherUsers = async (id: string) => {
+  const users = await db.user.findMany({
+    where: {
+      NOT: {
+        id,
+      },
+    },
+  });
+
+  return users;
+};

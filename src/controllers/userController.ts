@@ -2,11 +2,16 @@ import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { createNewUser, getUserByUsername } from '../db/queries/userQueries';
+import {
+  createNewUser,
+  getOtherUsers,
+  getUserByUsername,
+} from '../db/queries/userQueries';
 import {
   validateLoginUser,
   validateRegisterUser,
 } from '../validations/userValidations';
+import { CustomRequest } from '../types/CustomRequest';
 
 const SECRET_KEY: string = process.env.JWT_SECRET_KEY as string;
 
@@ -104,3 +109,27 @@ export const loginUser = [
     return;
   },
 ];
+
+export const getUsersToTalk = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { userId } = req;
+
+  if (!userId) {
+    res.status(403).json({
+      message: 'Unauthorized action',
+    });
+    return;
+  }
+
+  const users = await getOtherUsers(userId);
+
+  res.status(200).json({
+    users,
+    message: 'Users fetched successfully!',
+  });
+
+  return;
+};
