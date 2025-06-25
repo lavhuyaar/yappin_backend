@@ -5,7 +5,7 @@ import messageRoutes from './messageRoutes';
 
 const routes = Router();
 routes.use('/user', userRoutes);
-routes.use('/chat', chatRoutes);
+routes.use('/chats', chatRoutes);
 routes.use('/message', messageRoutes);
 
 export default routes;

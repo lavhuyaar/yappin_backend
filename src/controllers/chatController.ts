@@ -1,6 +1,10 @@
 import { NextFunction, Response } from 'express';
 import { CustomRequest } from '../types/CustomRequest';
-import { createChat, getChatByUserIds } from '../db/queries/chatQueries';
+import {
+  createChat,
+  getChatByUserIds,
+  getChatsByUserId,
+} from '../db/queries/chatQueries';
 
 export const createNewChat = async (
   req: CustomRequest,
@@ -46,6 +50,29 @@ export const createNewChat = async (
   res.status(201).json({
     message: 'Chat created successfully!',
     chat: newChat,
+  });
+  return;
+};
+
+export const getChats = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { userId } = req;
+
+  if (!userId) {
+    res.status(403).json({
+      message: 'Unauthorized action',
+    });
+    return;
+  }
+
+  const chats = await getChatsByUserId(userId);
+
+  res.status(200).json({
+    chats,
+    message: 'Chats fetched successfully!',
   });
   return;
 };

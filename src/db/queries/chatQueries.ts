@@ -59,5 +59,42 @@ export const getChatById = async (chatId: string) => {
     },
   });
 
-  return chatId;
+  return chat;
+};
+
+export const getChatsByUserId = async (userId: string) => {
+  const chat = await db.chat.findMany({
+    where: {
+      AND: [{ users: { some: { id: userId } } }],
+    },
+    include: {
+      users: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          username: true,
+        },
+      },
+      messages: {
+        select: {
+          sender: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+          receiver: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+          content: true,
+        },
+      },
+    },
+  });
+
+  return chat;
 };
