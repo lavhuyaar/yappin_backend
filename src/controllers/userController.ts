@@ -10,7 +10,7 @@ import {
 import {
   validateLoginUser,
   validateRegisterUser,
-} from '../validations/userValidations';
+} from '../validators/userValidators';
 import { CustomRequest } from '../types/CustomRequest';
 
 const SECRET_KEY: string = process.env.JWT_SECRET_KEY as string;

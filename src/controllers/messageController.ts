@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { CustomRequest } from '../types/CustomRequest';
-import { messageValidator } from '../validations/messageValidations';
+import { messageValidator } from '../validators/messageValidators';
 import { validationResult } from 'express-validator';
 import { createMessage } from '../db/queries/messageQueries';
 import { getChatById } from '../db/queries/chatQueries';

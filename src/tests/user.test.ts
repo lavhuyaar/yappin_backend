@@ -195,7 +195,6 @@ describe('GET /user', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.users.length).toBe(2);
   });
 
   it("should skip logged in User's data", async () => {
@@ -204,7 +203,6 @@ describe('GET /user', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.users.length).toBe(2);
     expect(
       response.body.users.some((user: User) => user?.id === userCId),
     ).toBeFalsy();

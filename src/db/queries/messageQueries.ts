@@ -15,5 +15,14 @@ export const createMessage = async (
     },
   });
 
+  await db.chat.update({
+    where: {
+      id: chatId,
+    },
+    data: {
+      updatedAt: new Date(),
+    },
+  });
+
   return message;
 };

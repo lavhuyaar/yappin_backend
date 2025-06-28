@@ -18,7 +18,8 @@ model User {
   updatedAt        DateTime  @updatedAt
   sentMessages     Message[] @relation("Sender")
   receivedMessages Message[] @relation("Receiver")
-  chats            Chat[]    @relation("UserChats")
+  ChatA            Chat[]    @relation("ChatUserA")
+  ChatB            Chat[]    @relation("ChatUserB")
 }
 
 model Message {
@@ -36,7 +37,12 @@ model Message {
 
 model Chat {
   id        String    @id @default(uuid())
+  userAId   String
+  userBId   String
+  userA     User      @relation("ChatUserA", fields: [userAId], references: [id])
+  userB     User      @relation("ChatUserB", fields: [userBId], references: [id])
   messages  Message[]
-  users     User[]    @relation("UserChats")
-  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userAId, userBId])
 }

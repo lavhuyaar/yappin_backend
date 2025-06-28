@@ -50,6 +50,9 @@ export const getOtherUsers = async (id: string) => {
         id,
       },
     },
+    omit: {
+      password: true,
+    },
   });
 
   return users;
