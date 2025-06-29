@@ -9,6 +9,7 @@ import {
   createNewUser,
   getOtherUsers,
   getUserByUsername,
+  isUsernameAvailable,
   updateUser,
 } from '../db/queries/userQueries';
 import {
@@ -206,7 +207,7 @@ export const editUserProfile = [
     }
 
     //Checks if username already exists
-    const isUsernameExists = await getUserByUsername(username);
+    const isUsernameExists = await isUsernameAvailable(username, userId);
 
     if (isUsernameExists) {
       res.status(409).json({

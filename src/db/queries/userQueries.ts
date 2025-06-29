@@ -81,3 +81,16 @@ export const updateUser = async (
 
   return user;
 };
+
+export const isUsernameAvailable = (username: string, id: string) => {
+  const user = db.user.findUnique({
+    where: {
+      username,
+      NOT: {
+        id,
+      },
+    },
+  });
+
+  return user;
+};
