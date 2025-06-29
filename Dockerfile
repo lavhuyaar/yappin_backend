@@ -3,20 +3,17 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install all dependencies (including devDependencies)
+# Install all dependencies (dev + prod)
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
+# Copy all source code
 COPY . .
 
 # Generate Prisma client
 RUN npx prisma generate
 
-# Optional: Run database migrations (only if DATABASE_URL is set at build time)
-RUN npx prisma migrate deploy || echo "Skipping migration (optional in build phase)"
-
-# Build TypeScript
+# Build the TypeScript project
 RUN npm run build
 
 # Stage 2: Runtime
@@ -24,7 +21,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy only prod dependencies
+# Copy only production dependencies
 COPY package*.json ./
 RUN npm install --omit=dev
 
@@ -33,8 +30,12 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
+# Copy entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Set environment to production
 ENV NODE_ENV=production
 
-# Start the server
-CMD ["node", "dist/server.js"]
+# Start the app via entrypoint
+CMD ["/app/entrypoint.sh"]
