@@ -1,6 +1,6 @@
 import db from '../db';
 
-interface UserToRegister {
+interface IUserToRegister {
   username: string;
   firstName: string;
   lastName: string;
@@ -14,8 +14,8 @@ export const createNewUser = async ({
   lastName,
   password,
   profilePicture,
-}: UserToRegister) => {
-  const data: UserToRegister = {
+}: IUserToRegister) => {
+  const data: IUserToRegister = {
     username,
     firstName,
     lastName,
@@ -56,4 +56,28 @@ export const getOtherUsers = async (id: string) => {
   });
 
   return users;
+};
+
+export const updateUser = async (
+  id: string,
+  username: string,
+  firstName: string,
+  lastName: string,
+  profilePicture?: string | null,
+) => {
+  const data = {
+    firstName,
+    lastName,
+    username,
+    profilePicture,
+  };
+
+  const user = await db.user.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return user;
 };
